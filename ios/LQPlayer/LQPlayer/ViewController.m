@@ -15,19 +15,16 @@
 @end
 
 @implementation ViewController
+-(void)detroyPlayer{
+    [self.player shutdown];
+    [self.view willRemoveSubview:self.player.view];
+     self.player=nil;
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    // Do any additional setup after loading the view from its nib.
-    
-    //    [[UIApplication sharedApplication] setStatusBarHidden:YES];
-    //    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft animated:NO];
-    
-    
-    
-    
-    
+}
+- (void)initPlayer {
+    if(self.player!=NULL){
+        return;
+    }
 #ifdef DEBUG
     [IJKFFMoviePlayerController setLogReport:YES];
     [IJKFFMoviePlayerController setLogLevel:k_IJK_LOG_INFO];
@@ -39,28 +36,59 @@
     [IJKFFMoviePlayerController checkIfFFmpegVersionMatch:YES];
     // [IJKFFMoviePlayerController checkIfPlayerVersionMatch:YES major:1 minor:0 micro:0];
     IJKFFOptions *options = [IJKFFOptions optionsByDefault];
+    [options setPlayerOptionIntValue:1 forKey:@"framedrop"];
+    [options setPlayerOptionIntValue:0 forKey:@"packet-buffering"];  //  关闭播放器缓冲
+    [options setPlayerOptionIntValue:100 forKey:@"analyzemaxduration"];  //  关闭播放器缓冲
+    [options setPlayerOptionIntValue:10240 forKey:@"probesize"];
+    [options setPlayerOptionIntValue:1 forKey:@"flush_packets"];
     
-    self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:[[NSURL alloc]initWithString:@"rtmp://20630.liveplay.myqcloud.com/live/20630_c8afe67a01bb11e892905cb9018cf0d4"] withOptions:options];
+    self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:[[NSURL alloc]initWithString:@"rtmp://20630.liveplay.myqcloud.com/live/20630_2d8c508f00e411e892905cb9018cf0d4"] withOptions:options];
     self.player.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.player.view.frame = self.view.bounds;
-//    self.player.scalingMode = IJKMPMovieScalingModeAspectFit;
+    //    self.player.scalingMode = IJKMPMovieScalingModeAspectFit;
     self.player.scalingMode = IJKMPMovieScalingModeAspectFill;
     [self.view addSubview:self.player.view];
+    [self.player prepareToPlay];
+
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view, typically from a nib.
+    // Do any additional setup after loading the view from its nib.
+    
+    //    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    //    [[UIApplication sharedApplication] setStatusBarOrientation:UIInterfaceOrientationLandscapeLeft animated:NO];
     
     
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.player prepareToPlay];
+    [self initPlayer];
+
     [self installMovieNotificationObservers];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [self.player shutdown];
+    [self detroyPlayer];
+
     [self removeMovieNotificationObservers];
 }
+
+- (void)applicationWillResignActive:(NSNotification *)notification
+{
+    [self detroyPlayer];
+
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+    [self initPlayer];
+
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -121,13 +149,20 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(timeUpdate:)
                                                  name:IJKMPMoviePlayerTimeNotification
-                                               object:_player];
-    ;
-    
+                                               object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(moviePlayBackStateDidChange:)
                                                  name:IJKMPMoviePlayerPlaybackStateDidChangeNotification
-                                               object:_player];
+                                               object:nil];
+    
+   [ [NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:)
+name:UIApplicationWillResignActiveNotification object:nil]; //监听是否触发home键挂起程序.
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil]; //监听是否重新进入程序程序.
+    
+    
+
 }
 
 /* Remove the movie notification observers from the movie object. */
