@@ -47,6 +47,7 @@ NSString *const IJKMPMoviePlayerComponentOpenNotification           = @"IJKMPMov
 
 NSString *const IJKMPMoviePlayerAccurateSeekCompleteNotification = @"IJKMPMoviePlayerAccurateSeekCompleteNotification";
 
+NSString *const IJKMPMoviePlayerTimeNotification = @"IJKMPMoviePlayerTimeNotification";
 NSString *const IJKMPMoviePlayerDidSeekCompleteNotification = @"IJKMPMoviePlayerDidSeekCompleteNotification";
 NSString *const IJKMPMoviePlayerDidSeekCompleteTargetKey = @"IJKMPMoviePlayerDidSeekCompleteTargetKey";
 NSString *const IJKMPMoviePlayerDidSeekCompleteErrorKey = @"IJKMPMoviePlayerDidSeekCompleteErrorKey";

@@ -1183,6 +1183,13 @@ inline static void fillMetaInternal(NSMutableDictionary *meta, IjkMediaMeta *raw
              userInfo:@{IJKMPMoviePlayerDidAccurateSeekCompleteCurPos: @(avmsg->arg1)}];
             break;
         }
+        case FFP_TIME: {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:IJKMPMoviePlayerTimeNotification
+             object:self
+             userInfo:@{@"time": @(avmsg->arg1*1000L+avmsg->arg2)}];
+            break;
+        }
         default:
             // NSLog(@"unknown FFP_MSG_xxx(%d)\n", avmsg->what);
             break;
@@ -1654,6 +1661,7 @@ static int ijkff_inject_callback(void *opaque, int message, void *data, size_t d
         }
     });
 }
+
 
 @end
 

@@ -186,11 +186,18 @@ static int packet_queue_put_private(PacketQueue *q, AVPacket *pkt)
     SDL_CondSignal(q->cond);
     return 0;
 }
-
+static long long getLongLong(uint8_t *val2, int index) {
+    long long result = 0;
+    
+    for (int i = 2; i < 8; i++) {
+        long long tmp = *(val2 + index + i);
+        result += (tmp << ((7 - i) * 8));
+    }
+    return result;
+}
 static int packet_queue_put(PacketQueue *q, AVPacket *pkt)
 {
     int ret;
-
     SDL_LockMutex(q->mutex);
     ret = packet_queue_put_private(q, pkt);
     SDL_UnlockMutex(q->mutex);
@@ -592,6 +599,8 @@ static int decoder_decode_frame(FFPlayer *ffp, Decoder *d, AVFrame *frame, AVSub
 
         switch (d->avctx->codec_type) {
             case AVMEDIA_TYPE_VIDEO: {
+                long long time = getLongLong(d->pkt_temp.data, 6);
+                ffp_notify_msg3(ffp, FFP_TIME,time/1000,time%1000);
                 ret = avcodec_decode_video2(d->avctx, frame, &got_frame, &d->pkt_temp);
                 if (got_frame) {
                     ffp->stat.vdps = SDL_SpeedSamplerAdd(&ffp->vdps_sampler, FFP_SHOW_VDPS_AVCODEC, "vdps[avcodec]");

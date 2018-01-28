@@ -124,6 +124,7 @@ typedef NS_ENUM(NSInteger, IJKSDLGLViewApplicationState) {
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &_backingWidth);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &_backingHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderbuffer);
+    [CATransaction flush];
 
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE) {
@@ -318,6 +319,7 @@ typedef NS_ENUM(NSInteger, IJKSDLGLViewApplicationState) {
             return NO;
 
         IJK_GLES2_Renderer_setGravity(_renderer, _rendererGravity, _backingWidth, _backingHeight);
+        [CATransaction flush];
     }
 
     return YES;
