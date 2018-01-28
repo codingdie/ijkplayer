@@ -68,6 +68,8 @@ import tv.danmaku.ijk.media.player.pragma.DebugLog;
 public final class IjkMediaPlayer extends AbstractMediaPlayer {
     private final static String TAG = IjkMediaPlayer.class.getName();
 
+    private static final int MEDIA_TIME = -1; // interface test message
+
     private static final int MEDIA_NOP = 0; // interface test message
     private static final int MEDIA_PREPARED = 1;
     private static final int MEDIA_PLAYBACK_COMPLETE = 2;
@@ -1044,7 +1046,10 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                 player.notifyOnVideoSizeChanged(player.mVideoWidth, player.mVideoHeight,
                         player.mVideoSarNum, player.mVideoSarDen);
                 break;
+                case MEDIA_TIME:
 
+                    player.notifyOnTime(msg.arg1*1000l+msg.arg2);
+                    break;
             default:
                 DebugLog.e(TAG, "Unknown message type " + msg.what);
             }

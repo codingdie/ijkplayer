@@ -1005,6 +1005,9 @@ static void message_loop_n(JNIEnv *env, IjkMediaPlayer *mp)
                 post_event2(env, weak_thiz, MEDIA_GET_IMG_STATE, msg.arg1, msg.arg2, NULL);
             }
             break;
+        case FFP_TIME:
+             post_event(env, weak_thiz, MEDIA_TIME, msg.arg1, msg.arg2);
+             break;
         default:
             ALOGE("unknown FFP_MSG_xxx(%d)\n", msg.what);
             break;

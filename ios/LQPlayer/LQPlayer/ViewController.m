@@ -16,6 +16,9 @@
 
 @implementation ViewController
 -(void)detroyPlayer{
+    [self.player pause];
+    [self.player stop];
+
     [self.player shutdown];
     [self.view willRemoveSubview:self.player.view];
      self.player=nil;
@@ -38,8 +41,7 @@
     IJKFFOptions *options = [IJKFFOptions optionsByDefault];
     [options setPlayerOptionIntValue:1 forKey:@"framedrop"];
     [options setPlayerOptionIntValue:0 forKey:@"packet-buffering"];  //  关闭播放器缓冲
-    [options setPlayerOptionIntValue:100 forKey:@"analyzemaxduration"];  //  关闭播放器缓冲
-    [options setPlayerOptionIntValue:10240 forKey:@"probesize"];
+    [options setPlayerOptionIntValue:100 forKey:@"analyzemaxduration"]; 
     [options setPlayerOptionIntValue:1 forKey:@"flush_packets"];
     
     self.player = [[IJKFFMoviePlayerController alloc] initWithContentURL:[[NSURL alloc]initWithString:@"rtmp://20630.liveplay.myqcloud.com/live/20630_2d8c508f00e411e892905cb9018cf0d4"] withOptions:options];

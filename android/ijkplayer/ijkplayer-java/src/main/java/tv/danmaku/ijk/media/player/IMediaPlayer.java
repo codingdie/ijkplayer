@@ -35,6 +35,8 @@ public interface IMediaPlayer {
     /*
      * Do not change these values without updating their counterparts in native
      */
+    int MEDIA_TIME = -1;
+
     int MEDIA_INFO_UNKNOWN = 1;
     int MEDIA_INFO_STARTED_AS_NEXT = 2;
     int MEDIA_INFO_VIDEO_RENDERING_START = 3;
@@ -139,6 +141,9 @@ public interface IMediaPlayer {
 
     void setOnInfoListener(OnInfoListener listener);
 
+    void setOnTimeListener(OnTimeListener listener);
+
+
     void setOnTimedTextListener(OnTimedTextListener listener);
 
     /*--------------------
@@ -172,7 +177,9 @@ public interface IMediaPlayer {
     interface OnInfoListener {
         boolean onInfo(IMediaPlayer mp, int what, int extra);
     }
-
+    interface OnTimeListener {
+        boolean onTime(IMediaPlayer mp, long time);
+    }
     interface OnTimedTextListener {
         void onTimedText(IMediaPlayer mp, IjkTimedText text);
     }

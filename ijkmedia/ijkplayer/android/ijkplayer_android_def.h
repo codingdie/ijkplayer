@@ -30,6 +30,7 @@
 
 //
 enum media_event_type {
+    MEDIA_TIME               = -1,        // interface test message
     MEDIA_NOP               = 0,        // interface test message
     MEDIA_PREPARED          = 1,
     MEDIA_PLAYBACK_COMPLETE = 2,

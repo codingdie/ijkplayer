@@ -29,6 +29,7 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
     private OnErrorListener mOnErrorListener;
     private OnInfoListener mOnInfoListener;
     private OnTimedTextListener mOnTimedTextListener;
+    private OnTimeListener mOnTimeListener;
 
     public final void setOnPreparedListener(OnPreparedListener listener) {
         mOnPreparedListener = listener;
@@ -62,6 +63,10 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
 
     public final void setOnTimedTextListener(OnTimedTextListener listener) {
         mOnTimedTextListener = listener;
+    }
+
+    public final void setOnTimeListener(OnTimeListener listener) {
+        mOnTimeListener = listener;
     }
 
     public void resetListeners() {
@@ -110,6 +115,9 @@ public abstract class AbstractMediaPlayer implements IMediaPlayer {
         return mOnInfoListener != null && mOnInfoListener.onInfo(this, what, extra);
     }
 
+    protected final boolean notifyOnTime(long time) {
+        return mOnTimeListener != null && mOnTimeListener.onTime(this, time);
+    }
     protected final void notifyOnTimedText(IjkTimedText text) {
         if (mOnTimedTextListener != null)
             mOnTimedTextListener.onTimedText(this, text);

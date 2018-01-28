@@ -283,6 +283,22 @@ public class MediaPlayerProxy implements IMediaPlayer {
     }
 
     @Override
+    public void setOnTimeListener(OnTimeListener listener) {
+        if (listener != null) {
+            final OnTimeListener finalListener = listener;
+            mBackEndMediaPlayer.setOnTimeListener(new OnTimeListener() {
+
+                @Override
+                public boolean onTime(IMediaPlayer mp, long time) {
+                    return finalListener.onTime(MediaPlayerProxy.this, time);
+                }
+            });
+        } else {
+            mBackEndMediaPlayer.setOnTimeListener(null);
+        }
+    }
+
+    @Override
     public void setOnTimedTextListener(OnTimedTextListener listener) {
         if (listener != null) {
             final OnTimedTextListener finalListener = listener;
