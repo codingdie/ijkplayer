@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
         });
         ijkVideoView.start();
      }
- 
+
 
     @Override
     protected void onStop() {
